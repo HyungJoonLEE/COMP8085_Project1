@@ -29,12 +29,6 @@ def preprocess_data(df):
     return df
 
 
-def factorize_feature(df, features):
-    for feature in features:
-        df[feature] = pd.factorize(df[feature])[0]
-    return df
-
-
 def process_attack_cat(df):
     df['attack_cat'] = df.attack_cat.fillna(value='normal').apply(
         lambda x: x.strip().lower())
@@ -77,8 +71,9 @@ def process_stringify(df):
     need_string = ['srcip', 'dstip']
 
     for feature in need_string:
+        df[feature] = pd.to_numeric(df[feature], errors='coerce').fillna(0)
         # Pandas support "string" after ver 1.0.0
-        df[feature] = df[feature].astype("string")
+        df[feature] = df[feature].astype('string')
 
     return df
 
@@ -108,3 +103,4 @@ def hex_to_dec(port):
         return int(port, 16)
     else:
         return port
+

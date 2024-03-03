@@ -16,6 +16,7 @@ features = ['srcip', 'sport', 'dstip', 'dsport',
             'ct_srv_dst', 'ct_dst_ltm',	'ct_src_ ltm', 'ct_src_dport_ltm',
             'ct_dst_sport_ltm',	'ct_dst_src_ltm', 'attack_cat',	'Label']
 
+
 def main():
     # Read csv using pandas in Latin mode
     origin = pd.read_csv(ORIGINAL_CSV, encoding='ISO-8859-1', low_memory=False)
@@ -24,6 +25,7 @@ def main():
     print(df.info())
 
     return 0
+
 
 if __name__ == "__main__":
     main()

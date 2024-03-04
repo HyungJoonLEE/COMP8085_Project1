@@ -5,19 +5,18 @@ from sklearn.metrics import precision_recall_fscore_support
 
 
 def knn_model(training_data=None, test_data=None, validation_data=None,target=None):
-    categories = ['srcip', 'dstip']
-    for category in categories:
-        if category in training_data.columns:
-            training_data.loc[:, [category]] = training_data.loc[:, [category]].apply(lambda x: pd.factorize(x)[0])
-            test_data.loc[:, [category]] = test_data.loc[:, [category]].apply(lambda x: pd.factorize(x)[0])
-            validation_data.loc[:, [category]] = validation_data.loc[:, [category]].apply(lambda x: pd.factorize(x)[0])
-
+    # categories = ['srcip', 'dstip']
+    # for category in categories:
+    #     if category in training_data.columns:
+    #         training_data.loc[:, [category]] = training_data.loc[:, [category]].apply(lambda x: pd.factorize(x)[0])
+    #         test_data.loc[:, [category]] = test_data.loc[:, [category]].apply(lambda x: pd.factorize(x)[0])
+    #         validation_data.loc[:, [category]] = validation_data.loc[:, [category]].apply(lambda x: pd.factorize(x)[0])
 
     Y_train = training_data[target]
-    X_train = training_data.drop(['Label', 'attack_cat'], axis=1)
+    X_train = training_data.drop(['srcip', 'dstip','Label', 'attack_cat'], axis=1)
 
     Y_test = test_data[target]
-    X_test = test_data.drop(['Label', 'attack_cat'], axis=1)
+    X_test = test_data.drop(['srcip', 'dstip','Label', 'attack_cat'], axis=1)
 
     Y_validate = validation_data[target]
     X_validate = validation_data.drop(['Label', 'attack_cat'], axis=1)
@@ -33,6 +32,7 @@ def knn_model(training_data=None, test_data=None, validation_data=None,target=No
         record_val_accuracy.append(score)
         if score > best_score:
             best_k, best_score = k, score
+
     if target == "Label":
         print(f"Best K based on validation accuracy: {best_k}")
         # Retrain the model with the best hyperparameter on the combined training and validation set

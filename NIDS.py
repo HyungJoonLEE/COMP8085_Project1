@@ -51,10 +51,10 @@ function_hashmap = {
 }
 
 
-def run_function_by_key(key):
+def run_function_by_key(key, training_data, test_data, target):
     if key in function_hashmap:
         function_to_run = function_hashmap[key]
-        function_to_run()
+        function_to_run(training_data, test_data, target)
     else:
         print(f"No function found for key: {key}")
 
@@ -63,7 +63,6 @@ def main():
     global task_
     print(os.getcwd())
     args = get_args(sys.argv[1:]).parse_args()
-    print(args)
 
     # Read csv using pandas in Latin mode
     original_csv = pd.read_csv(ORIGINAL_CSV,
@@ -72,14 +71,6 @@ def main():
 
     # Process data - change values of ports and null + factorize
     df = ref.preprocess_data(original_csv)
-
-    # Check args.task
-    if args.task == 'Label':
-
-    elif args.task == 'attack_cat':
-
-    else:
-        print("No task selected.")
 
     # Split original csv into train and validate+test (0.7 : 0.3)
     train_df, validate_test_df = train_test_split(df,
@@ -94,17 +85,24 @@ def main():
                                             shuffle=True,
                                             stratify=validate_test_df[
                                                 'Label'],
-                                            random_state=32)
+                                            random_state=34)
 
     # Save in to csv format
     train_df.to_csv('./data/train_data.csv', index=False)
     test_df.to_csv('./data/test_data.csv', index=False)
     validate_df.to_csv('./data/validate_data.csv', index=False)
 
-    print(df.shape)
-    print(train_df.shape)
-    print(validate_df.shape)
-    print(test_df.shape)
+    # print(df.shape)
+    # print(train_df.shape)
+    # print(validate_df.shape)
+    # print(test_df.shape)
+
+    # Run
+    run_function_by_key(args.classification_method,
+                        train_df,
+                        test_df,
+                        args.task)
+
 
     # print(df.info())
 

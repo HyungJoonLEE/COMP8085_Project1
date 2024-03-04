@@ -1,9 +1,6 @@
 import warnings
-from sklearn.linear_model import LogisticRegression
-from sklearn.feature_selection import RFECV
 from sklearn.feature_selection import RFE
 from sklearn.tree import DecisionTreeClassifier
-
 from sklearn.model_selection import train_test_split
 
 
@@ -21,20 +18,10 @@ def rfe_model(df, drop):
 
     warnings.filterwarnings(action='ignore')
 
-    estimator = LogisticRegression()
+    model = DecisionTreeClassifier()
+    rfe = RFE(model, n_features_to_select=20, step=1)
+    rfe.fit(x, y)
 
-    """
-    This is code for RFE
-    # Number of feature to select = 6
-    # Number of feature to delete every step = 1
-    selector_Label = RFE(estimator_Label, n_features_to_select=6, step=1)
-    """
+    print("\nSelected feature names:", rfe.get_feature_names_out())
+    print("Feature ranking:", rfe.ranking_)
 
-    # Number of feature to delete every step = 1
-    # Number of cross fold validation
-    selector = RFECV(estimator, step=1, cv=5)
-    selector = selector.fit(x_train, y_train)
-
-    selected_columns = x_train.columns[selector.support_]
-
-    selected_columns

@@ -7,6 +7,7 @@ import pandas as pd
 from scripts import preprocess as ref
 from sklearn.model_selection import train_test_split
 from models import RFE
+from models import KNN
 from models import GBC
 
 
@@ -82,15 +83,14 @@ def main():
     train_df, validate_test_df = train_test_split(df,
                                                   train_size=0.7,
                                                   shuffle=True,
-                                                  stratify=df['Label'],
+                                                  stratify=df[args.task],
                                                   random_state=32)
 
     # Split validate+test into validate and test (0.5 : 0.5)
     validate_df, test_df = train_test_split(validate_test_df,
                                             train_size=0.5,
                                             shuffle=True,
-                                            stratify=validate_test_df[
-                                                'Label'],
+                                            stratify=validate_test_df[args.task],
                                             random_state=34)
 
     # Save in to csv format

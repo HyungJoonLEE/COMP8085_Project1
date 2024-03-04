@@ -3,7 +3,6 @@ from sklearn.feature_selection import RFE
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 import numpy as np
-import pandas as pd
 
 
 def rfe_model(training_data, test_data, target):
@@ -35,5 +34,3 @@ def rfe_model(training_data, test_data, target):
 
     test_df = test_data[selected_features]
     test_df.to_csv('data/RFE/label/RFE-test-bin.csv', index=False)
-
-

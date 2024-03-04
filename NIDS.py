@@ -1,6 +1,8 @@
 import sys
 import os
 import argparse
+
+import KNN
 import pandas as pd
 from scripts import preprocess as ref
 from sklearn.model_selection import train_test_split
@@ -49,15 +51,16 @@ def get_args(args):
 
 function_hashmap = {
     'RFE': RFE.rfe_model,
+    'KNN': KNN.knn_model,
 }
 
 
-def run_function_by_key(key, training_data, test_data, target):
+def run_function_by_key(key, training_data, test_data, validation_data, target):
     if key in function_hashmap:
         function_to_run = function_hashmap[key]
         # TODO: Need to find out what will be the arguments
         #       for our classifier
-        function_to_run(training_data, test_data, target)
+        function_to_run(training_data, test_data, validation_data,target)
     else:
         print(f"No function found for key: {key}")
 
@@ -100,10 +103,12 @@ def main():
     # print(validate_df.shape)
     # print(test_df.shape)
 
+    #facotrize scrip and dstip
     # Run
     run_function_by_key(args.classification_method,
                         train_df,
                         test_df,
+                        validate_df,
                         args.task)
 
 

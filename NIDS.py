@@ -1,10 +1,13 @@
 import sys
 import os
 import argparse
+
+import KNN
 import pandas as pd
 from scripts import preprocess as ref
 from sklearn.model_selection import train_test_split
 from models import RFE
+from models import KNN
 from models import GBC
 from models import CCA
 
@@ -50,16 +53,17 @@ def get_args(args):
 
 function_hashmap = {
     'RFE': RFE.rfe_model,
+    'KNN': KNN.knn_model,
     'CCA': CCA.correlation_coefficient
 }
 
 
-def run_function_by_key(key, training_data, test_data, target):
+def run_function_by_key(key, training_data, test_data, validation_data, target):
     if key in function_hashmap:
         function_to_run = function_hashmap[key]
         # TODO: Need to find out what will be the arguments
         #       for our classifier
-        function_to_run(training_data, test_data, target)
+        function_to_run(training_data, test_data, validation_data,target)
     else:
         print(f"No function found for key: {key}")
 
@@ -81,15 +85,14 @@ def main():
     train_df, validate_test_df = train_test_split(df,
                                                   train_size=0.7,
                                                   shuffle=True,
-                                                  stratify=df['Label'],
+                                                  stratify=df[args.task],
                                                   random_state=32)
 
     # Split validate+test into validate and test (0.5 : 0.5)
     validate_df, test_df = train_test_split(validate_test_df,
                                             train_size=0.5,
                                             shuffle=True,
-                                            stratify=validate_test_df[
-                                                'Label'],
+                                            stratify=validate_test_df[args.task],
                                             random_state=34)
 
     # Save in to csv format
@@ -102,10 +105,12 @@ def main():
     # print(validate_df.shape)
     # print(test_df.shape)
 
+    #facotrize scrip and dstip
     # Run
     run_function_by_key(args.classification_method,
                         train_df,
                         test_df,
+                        validate_df,
                         args.task)
 
 

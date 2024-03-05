@@ -4,18 +4,18 @@ from sklearn.svm import SVC
 from sklearn.metrics import classification_report, accuracy_score
 from models.CCA import *
 
-def SVM(training_data, test_data, target):
+def SVM(training_data, test_data, validate_data, target):
     print("initializing targets")
 
     param_grid = {
-        'C': [1, 10],
+        'C': [10, 100],
         'kernel':['rbf']
     }
 
     targets = ["srcip","dstip","attack_cat", "Label"]
     #targets = ["attack_cat", "Label"]
     
-    CCA_train, CCA_test = correlation_coefficient(training_data, test_data, target)
+    CCA_train, CCA_test = correlation_coefficient(training_data, test_data, validate_data, target)
     
     sample1 = training_data.sample(n=20000)
     sample2 = test_data.sample(n=6000)

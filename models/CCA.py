@@ -1,6 +1,6 @@
 from sklearn.feature_selection import SelectKBest, mutual_info_classif
 
-def correlation_coefficient(training_data, test_data, target):
+def correlation_coefficient(training_data, test_data, validate_data, target):
     print("executing corr coef.")
     exclude_cols = [0, 2]
     if (target == "Label") :

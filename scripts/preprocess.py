@@ -54,7 +54,7 @@ def process_cmd(df):
     df['ct_ftp_cmd'] = df['ct_ftp_cmd'].fillna(0)
 
     # Change data type to float64
-    df['ct_ftp_cmd'] = df['ct_ftp_cmd'].astype(float)
+    df['ct_ftp_cmd'] = df['ct_ftp_cmd'].astype(int)
 
     return df
 

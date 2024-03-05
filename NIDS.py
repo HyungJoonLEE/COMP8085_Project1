@@ -52,7 +52,8 @@ def get_args(args):
 function_hashmap = {
     'RFE': RFE.rfe_model,
     'CCA': CCA.correlation_coefficient,
-    'SVM': SVM.SVM
+    'SVM': SVM.SVM,
+    'GBC': GBC.gbc_model,
 }
 
 
@@ -83,7 +84,7 @@ def main():
     train_df, validate_test_df = train_test_split(df,
                                                   train_size=0.7,
                                                   shuffle=True,
-                                                  stratify=df['Label'],
+                                                  stratify=df['attack_cat'],
                                                   random_state=32)
 
     # Split validate+test into validate and test (0.5 : 0.5)
@@ -91,7 +92,7 @@ def main():
                                             train_size=0.5,
                                             shuffle=True,
                                             stratify=validate_test_df[
-                                                'Label'],
+                                                'attack_cat'],
                                             random_state=34)
 
     # Save in to csv format

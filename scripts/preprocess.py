@@ -30,6 +30,9 @@ def preprocess_data(df):
 
 
 def process_attack_cat(df):
+    df['attack_cat'] = df['attack_cat'].str.strip()
+    # Standardize the category names
+    df['attack_cat'] = df['attack_cat'].replace({'Backdoor': 'Backdoors'})
     df['attack_cat'] = df.attack_cat.fillna(value='normal').apply(
         lambda x: x.strip().lower())
     return df

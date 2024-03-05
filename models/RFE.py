@@ -5,7 +5,7 @@ from sklearn.linear_model import LogisticRegression
 import numpy as np
 
 
-def rfe_model(training_data, test_data, target):
+def rfe_model(training_data, test_data, validate_data, target):
     warnings.filterwarnings(action='ignore')
 
     x = training_data.drop(['attack_cat', 'Label'], axis=1)

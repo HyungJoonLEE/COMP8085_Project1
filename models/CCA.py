@@ -35,4 +35,6 @@ def correlation_coefficient(training_data, test_data, target):
 
     test_df = test_data[selected_features_corr]
     test_df.to_csv('data/CCA-test-bin.csv', index=False)
+
+    return train_df, test_df
     

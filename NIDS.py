@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from models import RFE
 from models import GBC
 from models import CCA
+from models import SVM
 
 
 ORIGINAL_CSV = './data/UNSW-NB15-BALANCED-TRAIN.csv'
@@ -50,7 +51,8 @@ def get_args(args):
 
 function_hashmap = {
     'RFE': RFE.rfe_model,
-    'CCA': CCA.correlation_coefficient
+    'CCA': CCA.correlation_coefficient,
+    'SVM': SVM.SVM
 }
 
 

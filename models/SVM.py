@@ -15,7 +15,7 @@ def SVM(training_data, test_data, validate_data, target):
     targets = ["srcip","dstip","attack_cat", "Label"]
     #targets = ["attack_cat", "Label"]
     
-    CCA_train, CCA_test = correlation_coefficient(training_data, test_data, validate_data, target)
+    CCA_train, CCA_test, CCA_validate = correlation_coefficient(training_data, test_data, validate_data, target)
     
     sample1 = training_data.sample(n=20000)
     sample2 = test_data.sample(n=6000)

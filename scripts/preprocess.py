@@ -39,9 +39,11 @@ def process_http_login(df):
     # Handle data conversion where the column may contain non-numeric values
     df['ct_flw_http_mthd'] = pd.to_numeric(df['ct_flw_http_mthd'], errors='coerce')
     df['ct_flw_http_mthd'] = df['ct_flw_http_mthd'].fillna(0)
+    df['ct_flw_http_mthd'] = df['ct_flw_http_mthd'].astype(int)
 
     df['is_ftp_login'] = pd.to_numeric(df['is_ftp_login'], errors='coerce')
     df['is_ftp_login'] = df['is_ftp_login'].fillna(0)
+    df['is_ftp_login'] = df['is_ftp_login'].astype(int)
 
     return df
 
@@ -52,14 +54,14 @@ def process_cmd(df):
     df['ct_ftp_cmd'] = df['ct_ftp_cmd'].fillna(0)
 
     # Change data type to float64
-    df['ct_ftp_cmd'] = df['ct_ftp_cmd'].astype(float)
+    df['ct_ftp_cmd'] = df['ct_ftp_cmd'].astype(int)
 
     return df
 
 
 def process_factorization(df):
     need_factorization = ['proto', 'state', 'service', 'attack_cat']
-
+    df['service'] = df['service'].replace('-', 'unknown')
     # Factorize - Convert features to numerical format
     for feature in need_factorization:
         df[feature] = pd.factorize(df[feature])[0]

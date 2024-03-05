@@ -1,3 +1,10 @@
 .ipynb_checkpoints
 .idea
 **/__pycache__/
+./data/test_data.csv
+./data/train_data.csv
+./data/validate_data.csv
+./data/CCA-test-bin.csv
+./data/CCA-train-bin.csv
+./data/RFE-train-bin.csv
+./data/RFE-test-bin.csv

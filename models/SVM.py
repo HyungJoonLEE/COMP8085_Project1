@@ -13,13 +13,10 @@ def SVM(training_data, test_data, validate_data, target):
         'kernel':['rbf']
     }
 
-    #targets = ["srcip","dstip","attack_cat", "Label"]
     targets = ["attack_cat", "Label"]
-    
-    #CCA_train, CCA_test, CCA_validate = correlation_coefficient(training_data, test_data, validate_data, target)
     train, test, validate = rfe_model(training_data, test_data, validate_data, target)
 
-    sample1 = train.sample(n=10000)
+    sample1 = train.sample(n=15000)
     sample2 = validate.sample(n=5000)
 
     y_train = sample1[target]
@@ -43,8 +40,12 @@ def SVM(training_data, test_data, validate_data, target):
     best_model = grid_search.best_estimator_
     y_pred = best_model.predict(X_test_scaled)
 
+
+    vulnerabilities = ["None", "Generic", "Fuzzers", "Exploits", "Dos", "Reconnaissance","Analysis","Shellcode","Backdoors","Worms"]
+    if (target == "Label"):
+        vulnerabilities = ["Normal", "Malicious"]
     print("Best parameters: ", grid_search.best_params_)
     print("Best f1 score:", grid_search.best_score_)
     print(f"Accuracy: {accuracy_score(y_test, y_pred)}")
-    print(classification_report(y_test, y_pred))
+    print(classification_report(y_test, y_pred, target_names=vulnerabilities,zero_division=0))
 

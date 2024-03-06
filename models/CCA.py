@@ -18,11 +18,11 @@ def correlation_coefficient(training_data, test_data, validate_data, target):
     correlation_with_target = correlation_matrix[target].sort_values(ascending=False)
 
     threshold = 0.1
-    print(f"Displaying features above threshold of {threshold}")
+    print(f"Displaying feature correlations:")
     selected_features_corr = correlation_with_target[abs(correlation_with_target) > threshold].index.tolist()
-    #print(correlation_with_target)
+    print(correlation_with_target)
+    print(f"Number of features with abs correlation greater than (c = {threshold}): {len(selected_features_corr)}")
     print(selected_features_corr)
-    print(f"Length: {len(selected_features_corr)}")
 
     if (target == "Label"):
         selected_features_corr.append("attack_cat")

@@ -4,7 +4,6 @@ import argparse
 import pandas as pd
 from scripts import preprocess as ref
 from sklearn.model_selection import train_test_split
-from models import RFE
 from models import GBC
 from models import CCA
 from models import SVM
@@ -24,6 +23,19 @@ features = ['srcip', 'sport', 'dstip', 'dsport',
             'ct_flw_http_mthd',	'is_ftp_login',	'ct_ftp_cmd', 'ct_srv_src',
             'ct_srv_dst', 'ct_dst_ltm',	'ct_src_ ltm', 'ct_src_dport_ltm',
             'ct_dst_sport_ltm',	'ct_dst_src_ltm', 'attack_cat',	'Label']
+
+
+def remove_existing_csv():
+    directory = './data'
+
+    # Filename to exclude from deletion
+    exclude_file = 'UNSW-NB15-BALANCED-TRAIN.csv'
+
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
+        if filename.endswith('.csv') and filename != exclude_file:
+            os.remove(file_path)
+            print(f"Removed: {filename}")
 
 
 def get_args(args):
@@ -50,7 +62,6 @@ def get_args(args):
 
 
 function_hashmap = {
-    'RFE': RFE.rfe_model,
     'CCA': CCA.correlation_coefficient,
     'SVM': SVM.SVM,
     'GBC': GBC.gbc_model,
@@ -68,8 +79,7 @@ def run_function_by_key(key, training_data, test_data, validate_data, target):
 
 
 def main():
-    global task_
-    print(os.getcwd())
+    remove_existing_csv()
     args = get_args(sys.argv[1:]).parse_args()
 
     # Read csv using pandas in Latin mode
@@ -111,9 +121,6 @@ def main():
                         test_df,
                         validate_df,
                         args.task)
-
-
-    # print(df.info())
 
     return 0
 

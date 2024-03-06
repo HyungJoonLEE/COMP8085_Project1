@@ -1,6 +1,4 @@
-import os
 import warnings
-warnings.filterwarnings(action='ignore')
 from sklearn.feature_selection import RFE
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
@@ -8,6 +6,8 @@ import numpy as np
 
 
 def rfe_model(training_data, test_data, validate_data, target):
+    warnings.filterwarnings(action='ignore')
+
     print("Running RFE for feature selection - " + target)
 
     x = training_data.drop(['attack_cat', 'Label'], axis=1)
@@ -19,7 +19,7 @@ def rfe_model(training_data, test_data, validate_data, target):
         # attack_cat LogisticRegression() take so long => Decision Tree
         classifier = DecisionTreeClassifier()
 
-    rfe = RFE(classifier, n_features_to_select=20, step=1)
+    rfe = RFE(classifier, n_features_to_select=14, step=1)
     rfe.fit(x, y)
 
     # Print out selected features

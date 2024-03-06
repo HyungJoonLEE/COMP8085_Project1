@@ -5,6 +5,9 @@ from sklearn.ensemble import GradientBoostingClassifier
 
 
 def gbc_model(train_data, test_data, val_data, target):
+    vulnerabilities = ["None", "Generic", "Fuzzers", "Exploits", "Dos",
+                       "Reconnaissance", "Analysis", "Shellcode",
+                       "Backdoors", "Worms"]
     # Call feature selected .csv using RFE
     ft_train_data, ft_test_data, ft_val_data = rfe.rfe_model(train_data,
                                                              test_data,
@@ -33,7 +36,12 @@ def gbc_model(train_data, test_data, val_data, target):
                                                     max_depth=3)
     classifier_all.fit(x_all_train, y_all_train)
     pred_all = classifier_all.predict(x_all_test)
-    print(metrics.classification_report(y_all_test, pred_all))
+    if target == 'Label':
+        print(metrics.classification_report(y_all_test, pred_all))
+    else:
+        print(metrics.classification_report(y_all_test,
+                                            pred_all,
+                                            target_names=vulnerabilities))
 
     # Selected Feature
     print("\nProcessing selected feature - " + target)
@@ -57,9 +65,6 @@ def gbc_model(train_data, test_data, val_data, target):
     if target == 'Label':
         print(metrics.classification_report(y_ft_test, pred_ft))
     else:
-        vulnerabilities = ["None", "Generic", "Fuzzers", "Exploits", "Dos",
-                           "Reconnaissance", "Analysis", "Shellcode",
-                           "Backdoors", "Worms"]
         print(metrics.classification_report(y_ft_test,
                                             pred_ft,
                                             target_names=vulnerabilities))

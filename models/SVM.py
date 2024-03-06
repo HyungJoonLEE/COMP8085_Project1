@@ -8,7 +8,7 @@ def SVM(training_data, test_data, validate_data, target):
     print("initializing targets")
 
     param_grid = {
-        'C': [10, 100],
+        'C': [1, 10, 100, 1000],
         'kernel':['rbf']
     }
 
@@ -20,8 +20,8 @@ def SVM(training_data, test_data, validate_data, target):
     sample1 = training_data.sample(n=20000)
     sample2 = test_data.sample(n=6000)
 
-    #y_train = training_data[target]
-    #y_test = test_data[target]
+    #sample1 = CCA_train.sample(n=20000)
+    #sample2 = CCA_test.sample(n=6000)
 
     y_train = sample1[target]
     y_test = sample2[target]

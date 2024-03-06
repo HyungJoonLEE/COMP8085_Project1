@@ -17,7 +17,7 @@ def correlation_coefficient(training_data, test_data, validate_data, target):
     print("Sorting with target")
     correlation_with_target = correlation_matrix[target].sort_values(ascending=False)
 
-    threshold = 0.3 
+    threshold = 0.1
     print(f"Displaying features above threshold of {threshold}")
     selected_features_corr = correlation_with_target[abs(correlation_with_target) > threshold].index.tolist()
     #print(correlation_with_target)

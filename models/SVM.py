@@ -15,12 +15,14 @@ def SVM(training_data, test_data, validate_data, target):
 
     #targets = ["srcip","dstip","attack_cat", "Label"]
     targets = ["attack_cat", "Label"]
+    vars_label = ['proto', 'sttl', 'dttl', 'dloss', 'Spkts', 'Dpkts', 'swin', 'dwin', 'smeansz', 'ct_state_ttl', 'ct_srv_src', 'ct_srv_dst', 'ct_src_dport_ltm','ct_dst_src_ltm']
+    vars_attack_cat = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl', 'service', 'Sload', 'stcpb', 'smeansz', 'dmeansz', 'Stime', 'Sintpkt', 'synack', 'ct_srv_dst']
     
     #CCA_train, CCA_test, CCA_validate = correlation_coefficient(training_data, test_data, validate_data, target)
-    train, test, validate = rfe_model(training_data, test_data, validate_data, target)
+    #train, test, validate = rfe_model(training_data, test_data, validate_data, target)
 
-    sample1 = train.sample(n=10000)
-    sample2 = validate.sample(n=5000)
+    sample1 = training_data.sample(n=15000)
+    sample2 = validate_data.sample(n=5000)
 
     y_train = sample1[target]
     y_test = sample2[target]
@@ -29,6 +31,14 @@ def SVM(training_data, test_data, validate_data, target):
 
     X_train = sample1.drop(targets, axis = 1)
     X_test = sample2.drop(targets, axis = 1)
+
+    print("Selecting features based on RFE...")
+    if (target == "Label"):
+        X_train = X_train[vars_label]
+        X_test = X_test[vars_label]
+    else:
+        X_train = X_train[vars_attack_cat]
+        X_test = X_test[vars_attack_cat]
 
     print("Creating and applying scaler...")
     scaler = StandardScaler()

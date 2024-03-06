@@ -42,7 +42,8 @@ def SVM(training_data, test_data, validate_data, target):
 
 
     vulnerabilities = ["None", "Generic", "Fuzzers", "Exploits", "Dos", "Reconnaissance","Analysis","Shellcode","Backdoors","Worms"]
-        
+    if (target == "Label"):
+        vulnerabilities = ["Normal", "Malicious"]
     print("Best parameters: ", grid_search.best_params_)
     print("Best f1 score:", grid_search.best_score_)
     print(f"Accuracy: {accuracy_score(y_test, y_pred)}")

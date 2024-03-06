@@ -1,6 +1,7 @@
 import pandas as pd
 from models import RFE as rfe
 from sklearn import metrics # is used to create classification results
+from sklearn.metrics import accuracy_score # is used to create validation score
 from sklearn.ensemble import GradientBoostingClassifier
 
 
@@ -14,6 +15,7 @@ def gbc_model(train_data, test_data, val_data, target):
                                                              val_data,
                                                              target)
 
+    print("Running GBC Classifier\n")
     ip_feature = ['srcip', 'dstip']
     for ip in ip_feature:
         train_data[ip] = pd.factorize(train_data[ip])[0]
@@ -42,6 +44,8 @@ def gbc_model(train_data, test_data, val_data, target):
         print(metrics.classification_report(y_all_test,
                                             pred_all,
                                             target_names=vulnerabilities))
+    val_score_all = accuracy_score(y_all_test, pred_all)
+    print("Accuracy score: ", val_score_all)
 
     # Selected Feature
     print("\nProcessing selected feature - " + target)
@@ -69,5 +73,7 @@ def gbc_model(train_data, test_data, val_data, target):
                                             pred_ft,
                                             target_names=vulnerabilities))
 
+    val_score_ft = accuracy_score(y_ft_test, pred_ft)
+    print("Accuracy score: ", val_score_ft)
 
 

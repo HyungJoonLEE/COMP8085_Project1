@@ -5,7 +5,6 @@ from sklearn.metrics import precision_recall_fscore_support, classification_repo
 from sklearn.preprocessing import StandardScaler
 from models import BKS
 
-#from COMP8085_Project1.models.BKS import bks_model
 
 LIMIT = 20000
 

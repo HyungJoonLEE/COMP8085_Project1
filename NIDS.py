@@ -3,7 +3,6 @@ import os
 import argparse
 import pandas as pd
 
-#from COMP8085_Project1.models import KNN, BKS
 from scripts import preprocess as ref
 from sklearn.model_selection import train_test_split
 from models import GBC
@@ -11,6 +10,7 @@ from models import CCA
 from models import SVM
 from models import KNN
 from models import BKS
+from models import RFE
 
 
 ORIGINAL_CSV = './data/UNSW-NB15-BALANCED-TRAIN.csv'
@@ -69,6 +69,7 @@ function_hashmap = {
     'CCA': CCA.correlation_coefficient,
     'SVM': SVM.SVM,
     'GBC': GBC.gbc_model,
+    'RFE': RFE.rfe_model,
     'KNN': KNN.knn_model,
     'BKS': BKS.bks_model,
 }
@@ -77,8 +78,6 @@ function_hashmap = {
 def run_function_by_key(key, training_data, test_data, validate_data, target):
     if key in function_hashmap:
         function_to_run = function_hashmap[key]
-        # TODO: Need to find out what will be the arguments
-        #       for our classifier
         function_to_run(training_data, test_data, validate_data, target)
     else:
         print(f"No function found for key: {key}")

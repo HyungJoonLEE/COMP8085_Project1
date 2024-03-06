@@ -3,14 +3,15 @@ import os
 import argparse
 import pandas as pd
 
-from COMP8085_Project1.models import KNN, BKS
+from COMP8085_Project1.models import KNN, SKB
 from scripts import preprocess as ref
 from sklearn.model_selection import train_test_split
 from models import GBC
 from models import CCA
 from models import SVM
 from models import KNN
-from models import BKS
+from models import SKB
+from models import RFE
 
 
 ORIGINAL_CSV = './data/UNSW-NB15-BALANCED-TRAIN.csv'
@@ -69,8 +70,9 @@ function_hashmap = {
     'CCA': CCA.correlation_coefficient,
     'SVM': SVM.SVM,
     'GBC': GBC.gbc_model,
+    'RFE': RFE.rfe_model,
     'KNN': KNN.knn_model,
-    'BKS': BKS.bks_model,
+    'SKB': SKB.skb,
 }
 
 

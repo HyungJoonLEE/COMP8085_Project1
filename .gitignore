@@ -6,5 +6,7 @@
 ./data/validate_data.csv
 ./data/CCA-test-bin.csv
 ./data/CCA-train-bin.csv
+./data/CCA-validate-bin.csv
 ./data/RFE-train-bin.csv
 ./data/RFE-test-bin.csv
+./data/RFE-validate-bin.csv

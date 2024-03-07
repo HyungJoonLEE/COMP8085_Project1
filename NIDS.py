@@ -166,11 +166,18 @@ def main():
                     
                     y_pred = loaded_model.predict(X_test_scaled)
                     print(classification_report(y_test, y_pred))
+            elif args.classification_method == "GBC":
+                if args.task == "Label":
+                    label_test = train_df[RFE_Label_X]
+                    y_test = train_df["Label"]
+                    y_pred = loaded_model.predict(label_test)
+                    print(classification_report(y_test, y_pred))
+                if args.task == "attack_cat":
+                    attack_cat_test = train_df[RFE_attack_cat_X]
+                    y_test = train_df["attack_cat"]
+                    y_pred = loaded_model.predict(attack_cat_test)
+                    print(classification_report(y_test, y_pred))
 
-
-            elif (args.classification_method == "GBC"):
-                print("Hello")
-            
             elif (args.classification_method == "KNN"):
                 print("Hello")
     else:

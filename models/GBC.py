@@ -1,4 +1,5 @@
 import pandas as pd
+import pickle
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import classification_report, accuracy_score
@@ -13,13 +14,14 @@ def gbc_model(train_data, test_data, val_data, target):
                        "Reconnaissance", "Analysis", "Shellcode",
                        "Backdoors", "Worms"]
 
-    # TODO: To run small sample
+    # TODO: To run small sample to train the model and find best using
+    #       Hyperparameter tuning
     #       This make runtime short using selected features from RFE
     targets = ["attack_cat", "Label"]
 
     vars_label = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl', 'Sload',
-                  'Dload', 'dtcpb', 'dmeansz', 'res_bdy_len', 'Sjit', 'Djit',
-                  'Stime', 'Ltime', 'Sintpkt']
+                  'Dload', 'dmeansz', 'res_bdy_len', 'Sjit', 'Djit', 'Stime',
+                  'Ltime', 'Sintpkt']
 
     vars_attack_cat = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl',
                        'service', 'Sload', 'stcpb', 'smeansz', 'dmeansz',
@@ -39,8 +41,8 @@ def gbc_model(train_data, test_data, val_data, target):
         val_data[ip] = pd.factorize(val_data[ip])[0]
 
     # TODO: Can modify number of samples
-    sample1 = train_data.sample(n=15000)
-    sample2 = val_data.sample(n=5000)
+    sample1 = train_data.sample(n=60000)
+    sample2 = val_data.sample(n=10000)
 
     y_train = sample1[target]
     y_test = sample2[target]
@@ -75,7 +77,11 @@ def gbc_model(train_data, test_data, val_data, target):
         print(classification_report(y_test, y_pred))
     else:
         print(classification_report(y_test, y_pred,
-                                    target_names=vulnerabilities))
+                                    target_names=vulnerabilities,
+                                    zero_division=0))
+
+    with open(f'GBC_{target}.pkl', 'wb') as file:
+        pickle.dump(best_model, file)
 
     # TODO: Running entire data set from feature selection to classifier.
     #       This will show the result of using classifier with all features and
@@ -104,11 +110,11 @@ def gbc_model(train_data, test_data, val_data, target):
     # classifier_all.fit(x_all_train, y_all_train)
     # pred_all = classifier_all.predict(x_all_test)
     # if target == 'Label':
-    #     print(metrics.classification_report(y_all_test, pred_all))
+    #     print(classification_report(y_all_test, pred_all))
     # else:
-    #     print(metrics.classification_report(y_all_test,
-    #                                         pred_all,
-    #                                         target_names=vulnerabilities))
+    #     print(classification_report(y_all_test,
+    #                                 pred_all,
+    #                                 target_names=vulnerabilities))
     # val_score_all = accuracy_score(y_all_test, pred_all)
     # print("Accuracy score: ", val_score_all)
     #
@@ -132,11 +138,12 @@ def gbc_model(train_data, test_data, val_data, target):
     # pred_ft = classifier_ft.predict(x_ft_test)
     #
     # if target == 'Label':
-    #     print(metrics.classification_report(y_ft_test, pred_ft))
+    #     print(classification_report(y_ft_test, pred_ft))
     # else:
-    #     print(metrics.classification_report(y_ft_test,
-    #                                         pred_ft,
-    #                                         target_names=vulnerabilities))
+    #     print(classification_report(y_ft_test,
+    #                                 pred_ft,
+    #                                 target_names=vulnerabilities,
+    #                                 zero_division=0))
     #
     # val_score_ft = accuracy_score(y_ft_test, pred_ft)
     # print("Accuracy score: ", val_score_ft)

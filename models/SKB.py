@@ -6,6 +6,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 def skb(training_data, test_data, validation_data, target):
+
     X = training_data.drop(['srcip', 'dstip', 'Label', 'attack_cat'], axis=1)
     Y = training_data[target]
 

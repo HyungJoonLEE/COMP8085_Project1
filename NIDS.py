@@ -2,7 +2,10 @@ import sys
 import os
 import argparse
 import pandas as pd
+import pickle
+from sklearn.preprocessing import StandardScaler
 
+from sklearn.metrics import classification_report
 from scripts import preprocess as ref
 from sklearn.model_selection import train_test_split
 from models import GBC
@@ -62,6 +65,11 @@ def get_args(args):
                             action='store_const',
                             const='attack_cat',
                             help='Predict the attack category')
+    
+    parser.add_argument('--pickle_file',
+                        type=str,
+                        required=False,
+                        help='File name for the pickle object containing model or data')
     return parser
 
 
@@ -123,7 +131,52 @@ def main():
     # print(test_df.shape)
 
     # Run
-    run_function_by_key(args.classification_method,
+    if (args.pickle_file):
+        with open(args.pickle_file, 'rb') as file:
+            
+            loaded_model = pickle.load(file)
+            if (args.classification_method == "SVM"):
+                RFE_attack_cat_X = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl','service', 'Sload', 'stcpb', 'smeansz', 'dmeansz', 'Ltime', 'Sintpkt','synack', 'ct_srv_dst']
+                RFE_Label_X = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl', 'Sload', 'Dload', 'dmeansz', 'res_bdy_len', 'Sjit', 'Djit', 'Stime', 'Ltime', 'Sintpkt']
+                if (args.task == "Label"):
+                    
+
+                    #SVM only
+                    scaler = StandardScaler()
+                    label_train = train_df[RFE_Label_X]
+                    label_test = train_df[RFE_Label_X]
+                    y_test = train_df["Label"]
+
+                    X_train_scaled = scaler.fit_transform(label_train)
+                    X_test_scaled = scaler.transform(label_test)
+
+
+                    
+                    y_pred = loaded_model.predict(X_test_scaled)
+                    print(classification_report(y_test, y_pred))
+                if (args.task == "attack_cat"):
+                    #SVM only
+                    scaler = StandardScaler()
+                    attack_cat_train = train_df[RFE_attack_cat_X]
+                    attack_cat_test = train_df[RFE_attack_cat_X]
+                    y_test = train_df["attack_cat"]
+                    
+                    X_train_scaled = scaler.fit_transform(attack_cat_train)
+                    X_test_scaled = scaler.transform(attack_cat_test)
+
+
+                    
+                    y_pred = loaded_model.predict(X_test_scaled)
+                    print(classification_report(y_test, y_pred))
+
+
+            elif (args.classification_method == "GBC"):
+                print("Hello")
+            
+            elif (args.classification_method == "KNN"):
+                print("Hello")
+    else:
+        run_function_by_key(args.classification_method,
                         train_df,
                         test_df,
                         validate_df,

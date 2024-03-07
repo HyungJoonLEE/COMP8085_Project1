@@ -4,6 +4,7 @@ from sklearn.svm import SVC
 from sklearn.metrics import classification_report, accuracy_score
 from models.CCA import *
 from models.RFE import *
+import pickle
 
 def SVM(training_data, test_data, validate_data, target):
     print("initializing targets")
@@ -14,18 +15,27 @@ def SVM(training_data, test_data, validate_data, target):
     }
 
     targets = ["attack_cat", "Label"]
-    train, test, validate = rfe_model(training_data, test_data, validate_data, target)
+    RFE_attack_cat_X = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl','service', 'Sload', 'stcpb', 'smeansz', 'dmeansz', 'Ltime', 'Sintpkt','synack', 'ct_srv_dst']
+    RFE_Label_X = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl', 'Sload', 'Dload', 'dmeansz', 'res_bdy_len', 'Sjit', 'Djit', 'Stime', 'Ltime', 'Sintpkt']
+                
+    #train, test, validate = rfe_model(training_data, test_data, validate_data, target)
 
-    sample1 = train.sample(n=15000)
-    sample2 = validate.sample(n=5000)
+    sample1 = training_data.sample(n=15000)
+    sample2 = validate_data.sample(n=5000)
 
     y_train = sample1[target]
     y_test = sample2[target]
 
-    print("Dropping targets from X dataframe...")
+    X_train= []
+    X_test= []
 
-    X_train = sample1.drop(targets, axis = 1)
-    X_test = sample2.drop(targets, axis = 1)
+    print("Dropping targets from X dataframe...")
+    if  (target == "Label"):
+        X_train = sample1[RFE_Label_X]
+        X_test = sample2[RFE_Label_X]
+    else:
+        X_train = sample1[RFE_attack_cat_X]
+        X_test = sample2[RFE_attack_cat_X]
 
     print("Creating and applying scaler...")
     scaler = StandardScaler()
@@ -41,11 +51,13 @@ def SVM(training_data, test_data, validate_data, target):
     y_pred = best_model.predict(X_test_scaled)
 
 
-    vulnerabilities = ["None", "Generic", "Fuzzers", "Exploits", "Dos", "Reconnaissance","Analysis","Shellcode","Backdoors","Worms"]
+    #vulnerabilities = ["None", "Generic", "Fuzzers", "Exploits", "Dos", "Reconnaissance","Analysis","Shellcode","Backdoors","Worms"]
     if (target == "Label"):
         vulnerabilities = ["Normal", "Malicious"]
     print("Best parameters: ", grid_search.best_params_)
     print("Best f1 score:", grid_search.best_score_)
     print(f"Accuracy: {accuracy_score(y_test, y_pred)}")
-    print(classification_report(y_test, y_pred, target_names=vulnerabilities,zero_division=0))
-
+    print(classification_report(y_test, y_pred, zero_division=0))
+    
+    with open(f'SVM_{target}.pkl','wb') as file:
+        pickle.dump (best_model, file)

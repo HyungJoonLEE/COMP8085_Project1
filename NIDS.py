@@ -3,6 +3,8 @@ import os
 import argparse
 import pandas as pd
 import pickle
+
+from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 
 from sklearn.metrics import classification_report
@@ -179,7 +181,32 @@ def main():
                     print(classification_report(y_test, y_pred))
 
             elif (args.classification_method == "KNN"):
-                print("Hello")
+                if (args.task == "Label"):
+                    # KNN only
+                    print(f"Loading pickle {args.task}")
+                    scaler = StandardScaler()
+                    label_train = train_df[RFE_Label_X]
+                    label_test = train_df[RFE_Label_X]
+                    y_test = train_df["Label"]
+
+                    X_train_scaled = scaler.fit_transform(label_train)
+                    X_test_scaled = scaler.transform(label_test)
+
+                    y_pred = loaded_model.predict(X_test_scaled)
+                    print(classification_report(y_test, y_pred))
+                elif args.task == "attack_cat":
+                    #KNN only
+                    print(f"Loading pickle {args.task}")
+                    scaler = StandardScaler()
+                    attack_cat_train = train_df[RFE_attack_cat_X]
+                    attack_cat_test = train_df[RFE_attack_cat_X]
+                    y_test = train_df["attack_cat"]
+
+                    X_train_scaled = scaler.fit_transform(attack_cat_train)
+                    X_test_scaled = scaler.transform(attack_cat_test)
+
+                    y_pred = loaded_model.predict(X_test_scaled)
+                    print(classification_report(y_test, y_pred))
     else:
         run_function_by_key(args.classification_method,
                         train_df,

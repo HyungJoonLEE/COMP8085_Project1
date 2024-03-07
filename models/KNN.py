@@ -56,8 +56,7 @@ def knn_model(training_data, test_data, validation_data, target):
         print(f"{classification_report(Y_test_pred,Y_test, labels=[0,1], zero_division=0)}")
         end_time = time.time()
         print_elapsed_time(start_time, end_time)
-        with open('final_knn_model.pkl', 'wb') as f:
-            pickle.dump(final_model, f)
+
     elif target == "attack_cat":
         # Retrain the model with the best hyperparameter on the combined training and validation set
         final_model = KNeighborsClassifier(n_neighbors=5, weights='distance', metric='manhattan', n_jobs=5)
@@ -68,8 +67,18 @@ def knn_model(training_data, test_data, validation_data, target):
         print(f"{classification_report(Y_test_pred,Y_test,target_names=vulnerabilities, zero_division=0)}")
         end_time = time.time()
         print_elapsed_time(start_time, end_time)
+
+
+    bks_trainning_data = training_data
+    bks_test_data = test_data
+    bks_validation_data = validation_data
+    RFE_attack_cat_X = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl', 'service', 'Sload', 'stcpb', 'smeansz',
+                        'dmeansz', 'Ltime', 'Sintpkt', 'synack', 'ct_srv_dst']
+    RFE_Label_X = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl', 'Sload', 'Dload', 'dmeansz', 'res_bdy_len', 'Sjit',
+                   'Djit', 'Stime', 'Ltime', 'Sintpkt']
     #bks_trainning_data, bks_test_data, bks_validation_data = RFE.rfe_model(training_data, test_data, validation_data, target)
-    bks_trainning_data, bks_test_data, bks_validation_data = SKB.skb(training_data, test_data, validation_data, target)
+    #bks_trainning_data, bks_test_data, bks_validation_data = SKB.skb(training_data, test_data, validation_data, target)
+
     Y_bks_train = bks_trainning_data[target]
     X_bks_train = bks_trainning_data.drop(['Label', 'attack_cat'], axis=1)
     Y_bks_test = bks_test_data[target]
@@ -77,12 +86,13 @@ def knn_model(training_data, test_data, validation_data, target):
     Y_bks_val = bks_validation_data[target]
     X_bks_val = bks_validation_data.drop(['Label', 'attack_cat'], axis=1)
 
-    scaler = StandardScaler()
-    X_train = scaler.fit_transform(X_bks_train)
-    X_test = scaler.transform(X_bks_test)
-    X_validate = scaler.transform(X_bks_val)
+
 
     if target == "Label":
+        scaler = StandardScaler()
+        X_train = scaler.fit_transform(X_bks_train[RFE_Label_X])
+        X_test = scaler.transform(X_bks_test[RFE_Label_X])
+        X_validate = scaler.transform(X_bks_val[RFE_Label_X])
         # Retrain the model with the best hyperparameter on the combined training and validation set
         final_model = KNeighborsClassifier(n_neighbors=5, weights='distance', metric='manhattan', n_jobs=5)
         final_model.fit(np.concatenate([X_train, X_validate]), np.concatenate([Y_bks_train, Y_bks_val]))
@@ -91,7 +101,13 @@ def knn_model(training_data, test_data, validation_data, target):
         print(f"{classification_report(Y_test_pred,Y_test, labels=[0,1], zero_division=0)}")
         end_time = time.time()
         print_elapsed_time(start_time, end_time)
+        with open(f'KNN_{target}.pkl', 'wb') as file:
+            pickle.dump(final_model, file)
     elif target == "attack_cat":
+        scaler = StandardScaler()
+        X_train = scaler.fit_transform(X_bks_train[RFE_attack_cat_X])
+        X_test = scaler.transform(X_bks_test[RFE_attack_cat_X])
+        X_validate = scaler.transform(X_bks_val[RFE_attack_cat_X])
         # Retrain the model with the best hyperparameter on the combined training and validation set
         final_model = KNeighborsClassifier(n_neighbors=5, weights='distance', metric='manhattan', n_jobs=5)
         final_model.fit(np.concatenate([X_train, X_validate]), np.concatenate([Y_bks_train, Y_bks_val]))
@@ -101,4 +117,6 @@ def knn_model(training_data, test_data, validation_data, target):
         print(f"{classification_report(Y_test_pred,Y_test,target_names=vulnerabilities, zero_division=0)}")
         end_time_attack_cat = time.time()
         print_elapsed_time(start_time, end_time)
+        with open(f'KNN_{target}.pkl', 'wb') as file:
+            pickle.dump(final_model, file)
 

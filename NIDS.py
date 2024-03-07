@@ -139,8 +139,6 @@ def main():
                 RFE_attack_cat_X = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl','service', 'Sload', 'stcpb', 'smeansz', 'dmeansz', 'Ltime', 'Sintpkt','synack', 'ct_srv_dst']
                 RFE_Label_X = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl', 'Sload', 'Dload', 'dmeansz', 'res_bdy_len', 'Sjit', 'Djit', 'Stime', 'Ltime', 'Sintpkt']
                 if (args.task == "Label"):
-                    
-
                     #SVM only
                     scaler = StandardScaler()
                     label_train = train_df[RFE_Label_X]

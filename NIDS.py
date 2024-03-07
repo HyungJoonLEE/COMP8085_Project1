@@ -167,7 +167,7 @@ def main():
 
                     
                     y_pred = loaded_model.predict(X_test_scaled)
-                    print(classification_report(y_test, y_pred))
+                    print(classification_report(y_test, y_pred, zero_division=0))
             elif args.classification_method == "GBC":
                 if args.task == "Label":
                     label_test = train_df[RFE_Label_X]
@@ -178,7 +178,7 @@ def main():
                     attack_cat_test = train_df[RFE_attack_cat_X]
                     y_test = train_df["attack_cat"]
                     y_pred = loaded_model.predict(attack_cat_test)
-                    print(classification_report(y_test, y_pred))
+                    print(classification_report(y_test, y_pred, zero_division=0))
 
             elif (args.classification_method == "KNN"):
                 if (args.task == "Label"):
@@ -206,7 +206,7 @@ def main():
                     X_test_scaled = scaler.transform(attack_cat_test)
 
                     y_pred = loaded_model.predict(X_test_scaled)
-                    print(classification_report(y_test, y_pred))
+                    print(classification_report(y_test, y_pred, zero_division=0))
     else:
         run_function_by_key(args.classification_method,
                         train_df,

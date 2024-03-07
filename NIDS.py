@@ -133,11 +133,11 @@ def main():
     # Run
     if (args.pickle_file):
         with open(args.pickle_file, 'rb') as file:
-            
+            RFE_attack_cat_X = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl','service', 'Sload', 'stcpb', 'smeansz', 'dmeansz', 'Ltime', 'Sintpkt','synack', 'ct_srv_dst']
+            RFE_Label_X = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl', 'Sload', 'Dload', 'dmeansz', 'res_bdy_len', 'Sjit', 'Djit', 'Stime', 'Ltime', 'Sintpkt']
+
             loaded_model = pickle.load(file)
             if (args.classification_method == "SVM"):
-                RFE_attack_cat_X = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl','service', 'Sload', 'stcpb', 'smeansz', 'dmeansz', 'Ltime', 'Sintpkt','synack', 'ct_srv_dst']
-                RFE_Label_X = ['sport', 'dsport', 'sbytes', 'dbytes', 'sttl', 'Sload', 'Dload', 'dmeansz', 'res_bdy_len', 'Sjit', 'Djit', 'Stime', 'Ltime', 'Sintpkt']
                 if (args.task == "Label"):
                     #SVM only
                     scaler = StandardScaler()

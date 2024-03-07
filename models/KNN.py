@@ -5,7 +5,6 @@ import pandas as pd
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import precision_recall_fscore_support, classification_report
 from sklearn.preprocessing import StandardScaler
-from COMP8085_Project1.models import SKB
 from models import RFE
 
 def print_elapsed_time(start_time, end_time):
